@@ -1,0 +1,401 @@
+:root {
+   --bg: #0f172a;
+   --text: #e5e7eb;
+   --muted: #94a3b8;
+   --card: rgba(255, 255, 255, .06);
+   --border: rgba(255, 255, 255, .15);
+   --accent: #38bdf8;
+   --accent2: #22d3ee;
+   --danger: #f43f5e
+}
+
+ * {
+   box-sizing: border-box
+}
+
+ html, body {
+   height: 100%
+}
+
+ body {
+   margin: 0;
+   background: var(--bg);
+   color: var(--text);
+   font-family: system-ui, 'Noto Sans Arabic', Arial;
+   line-height: 1.6
+}
+
+ header {
+   position: sticky;
+   top: 0;
+   z-index: 10;
+   border-bottom: 1px solid var(--border);
+   background: rgba(0, 0, 0, .25);
+   backdrop-filter: blur(10px)
+}
+
+ .container {
+   max-width: 1100px;
+   margin: 0 auto;
+   padding: 16px
+}
+
+ .brand {
+   display: flex;
+   align-items: center;
+   gap: 12px
+}
+
+ .brand-truck {
+   width: 40px;
+   height: 40px;
+   object-fit: cover;
+   border-radius: 8px;
+   border: 1px solid var(--border)
+}
+
+ .brand-texts h1 {
+   margin: 0;
+   font-size: 20px
+}
+
+ nav {
+   display: flex;
+   gap: 8px;
+   flex-wrap: wrap;
+   margin-top: 12px
+}
+
+ .tab {
+   border: 1px solid var(--border);
+   color: var(--text);
+   background: var(--card);
+   padding: 10px 14px;
+   border-radius: 10px;
+   cursor: pointer
+}
+
+ .tab.active, .tab:hover {
+   background: rgba(255, 255, 255, .1)
+}
+
+ .tab.logout {
+   margin-inline-start: auto
+}
+
+ main {
+   padding: 18px 0 40px
+}
+
+ .grid {
+   display: grid;
+   grid-template-columns: 1.2fr 1fr;
+   gap: 16px
+}
+
+ .card {
+   background: var(--card);
+   border: 1px solid var(--border);
+   border-radius: 14px;
+   padding: 16px
+}
+
+ .card h2 {
+   margin: 0 0 10px;
+   font-size: 18px
+}
+
+ .muted {
+   color: var(--muted)
+}
+
+ .small {
+   font-size: 12px
+}
+
+ .form-grid {
+   display: grid;
+   grid-template-columns: repeat(4, 1fr);
+   gap: 10px
+}
+
+ label {
+   font-size: 12px;
+   color: var(--muted)
+}
+
+ input, select {
+   width: 100%;
+   padding: 10px;
+   border-radius: 10px;
+   border: 1px solid var(--border);
+   background: rgba(255, 255, 255, .05);
+   color: var(--text);
+   outline: none
+}
+
+ input:focus, select:focus {
+   border-color: var(--accent)
+}
+
+ .actions {
+   display: flex;
+   gap: 8px;
+   flex-wrap: wrap;
+   margin-top: 8px
+}
+
+ .btn {
+   padding: 10px 14px;
+   border-radius: 10px;
+   border: 1px solid var(--border);
+   background: var(--card);
+   color: var(--text);
+   cursor: pointer
+}
+
+ .btn.primary {
+   background: linear-gradient(135deg, var(--accent), var(--accent2));
+   color: #06202b;
+   border: 0;
+   font-weight: 700
+}
+
+ .btn.danger {
+   background: rgba(244, 63, 94, .12);
+   border-color: rgba(244, 63, 94, .4);
+   color: #fecdd3
+}
+
+ table {
+   width: 100%;
+   border-collapse: collapse;
+   font-size: 14px
+}
+
+ thead th {
+   text-align: right;
+   font-weight: 600;
+   color: #cbd5e1;
+   border-bottom: 1px solid var(--border);
+   padding: 10px 8px
+}
+
+ tbody td {
+   border-bottom: 1px dashed var(--border);
+   padding: 10px 8px
+}
+
+ .pill {
+   display: inline-flex;
+   align-items: center;
+   gap: 6px;
+   padding: 4px 8px;
+   border-radius: 999px;
+   font-size: 12px;
+   border: 1px solid var(--border);
+   background: rgba(255, 255, 255, .04)
+}
+
+ .pill.in {
+   border-color: rgba(34, 197, 94, .35);
+   background: rgba(34, 197, 94, .08)
+}
+
+ .pill.out {
+   border-color: rgba(244, 63, 94, .35);
+   background: rgba(244, 63, 94, .08)
+}
+
+ .stats {
+   display: grid;
+   grid-template-columns: repeat(4, 1fr);
+   gap: 10px
+}
+
+ .stat {
+   padding: 12px;
+   border: 1px solid var(--border);
+   border-radius: 12px;
+   background: rgba(255, 255, 255, .04)
+}
+
+ .stat h3 {
+   margin: 4px 0;
+   font-size: 20px
+}
+
+ .toolbar {
+   display: flex;
+   gap: 10px;
+   align-items: end;
+   flex-wrap: wrap;
+   margin-top: 8px
+}
+
+ .search {
+   flex: 1
+}
+
+ .row-actions {
+   display: flex;
+   gap: 6px
+}
+
+ .right {
+   text-align: left
+}
+
+ .balance-pos {
+   color: #86efac
+}
+
+ .balance-neg {
+   color: #fda4af
+}
+
+ .hidden {
+   display: none !important
+}
+
+ .drawer {
+   position: fixed;
+   inset: 0;
+   display: none;
+   z-index: 50;
+   background: rgba(0, 0, 0, .45)
+}
+
+ .drawer.open {
+   display: block
+}
+
+ .drawer-panel {
+   position: absolute;
+   inset-block: 0;
+   inset-inline-start: 0;
+   width: min(680px, 100%);
+   background: #0b1224;
+   border-inline-end: 1px solid var(--border);
+   padding: 16px 16px 90px;
+   overflow: auto
+}
+
+ .login-gate {
+   position: fixed;
+   inset: 0;
+   display: grid;
+   place-items: center;
+   z-index: 100
+}
+
+ .bg-blur {
+   position: absolute;
+   inset: 0;
+   background: radial-gradient(ellipse at 30% 20%, rgba(56, 189, 248, .15), transparent 40%), radial-gradient(ellipse at 70% 80%, rgba(34, 211, 238, .12), transparent 40%), url('../icons/truck.png') center / cover no-repeat;
+   filter: blur(20px) saturate(0.8);
+   opacity: 0.45
+}
+
+ .login-card {
+   position: relative;
+   width: min(560px, 92vw);
+   padding: 18px;
+   border-radius: 16px;
+   border: 1px solid var(--border);
+   background: rgba(15, 23, 42, .7);
+   backdrop-filter: blur(8px)
+}
+
+ .login-logo {
+   width: 100%;
+   max-height: 160px;
+   object-fit: cover;
+   border-radius: 10px;
+   border: 1px solid var(--border);
+   margin-bottom: 8px
+}
+
+ .login-card h2 {
+   margin: 6px 0 8px
+}
+
+ .login-card .form {
+   display: grid;
+   gap: 8px
+}
+
+ .login-card .remember {
+   display: flex;
+   align-items: center;
+   gap: 8px;
+   margin-top: 4px
+}
+
+ .error {
+   color: #fecaca
+}
+
+ .login-footer {
+   text-align: center;
+   margin-top: 6px
+}
+
+ @media (max-width: 1024px) {
+   .grid {
+      grid-template-columns: 1fr
+   }
+   .form-grid {
+      grid-template-columns: repeat(2, 1fr)
+   }
+   .stats {
+      grid-template-columns: repeat(2, 1fr)
+   }
+}
+
+ @media (max-width: 640px) {
+   nav {
+      gap: 6px
+   }
+   .tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px
+   }
+   .form-grid {
+      grid-template-columns: 1fr
+   }
+   .toolbar {
+      flex-direction: column;
+      align-items: stretch
+   }
+   .stats {
+      grid-template-columns: 1fr 1fr
+   }
+   thead {
+      display: none
+   }
+   table, tbody, tr, td {
+      display: block;
+      width: 100%
+   }
+   tbody tr {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin: 8px 0;
+      padding: 6px
+   }
+   tbody td {
+      border: 0;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px
+   }
+   tbody td::before {
+      content: attr(data-label);
+      color: var(--muted)
+   }
+   .right {
+      text-align: right
+   }
+}
