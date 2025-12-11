@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ghadeer Accounts | غدير للحسابات — Login Edition</title>
+  <link rel="stylesheet" href="assets/css/theme.css">
+  <link rel="manifest" href="manifest.json">
+  <script defer src="assets/js/crypto.js"></script>
+  <script defer src="assets/js/app.js"></script>
+  <style>
+    @media print{
+      body{background:#fff;color:#000}
+      header,#loginGate,.drawer .actions #d_close,.drawer .actions #d_export,.no-print{display:none!important}
+      .drawer{display:block!important; position:static; background:#fff}
+      .drawer-panel{inset:auto; width:100%; border:0; padding:0}
+      .print-header{display:flex!important; gap:12px; align-items:center; padding:12px 0; border-bottom:1px solid #ccc; margin-bottom:12px}
+      .print-logo{width:80px; height:80px; object-fit:cover; border-radius:6px}
+      .print-title{display:flex; flex-direction:column; gap:4px}
+      .print-title h1{margin:0; font-size:18px}
+      .print-meta{font-size:12px; color:#333}
+      table{font-size:12px}
+      thead th, tbody td{border-color:#ddd!important}
+      .print-footer{display:block!important; margin-top:10px; font-size:11px; color:#555; text-align:center}
+    }
+    .print-header,.print-footer{display:none}
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="container">
+      <div class="brand">
+        <img src="assets/icons/truck.png" alt="truck" class="brand-truck"/>
+        <div class="brand-texts">
+          <h1>Ghadeer Accounts | غدير للحسابات</h1>
+          <div class="muted">Bilingual • Secure Local • PWA • PDF Statements</div>
+        </div>
+      </div>
+      <nav id="tabs" class="hidden">
+        <button class="tab active" data-tab="clients">👥 Clients / العملاء</button>
+        <button class="tab" data-tab="transactions">🧾 Invoices & Payments / فواتير ودفعات</button>
+        <button class="tab" data-tab="expenses">🛠️ Expenses / المصروفات</button>
+        <button class="tab" data-tab="summary">📊 Company Summary / ملخص الشركة</button>
+        <button class="tab" data-tab="settings">⚙️ Settings / الإعدادات</button>
+        <button class="tab logout no-print" id="logoutBtn">🚪 Logout / تسجيل الخروج</button>
+      </nav>
+    </div>
+  </header>
+
+  <section id="loginGate" class="login-gate">
+    <div class="login-card glass">
+      <img src="assets/icons/brand-card.jpg" alt="Ghadeer Logistics Trans" class="login-logo"/>
+      <h2>Login / تسجيل الدخول</h2>
+      <p class="muted small">Your data stays on this device (AES-GCM encrypted). البيانات تبقى على هذا الجهاز.</p>
+      <div class="form">
+        <label>👤 Username / اسم المستخدم</label>
+        <input id="lg_user" placeholder="admin" autocomplete="username"/>
+        <label>🔑 Password / كلمة المرور</label>
+        <input id="lg_pass" type="password" placeholder="•••••" autocomplete="current-password"/>
+        <label class="remember"><input type="checkbox" id="lg_rem"> Remember me / تذكّرني</label>
+        <div class="actions">
+          <button class="btn primary" id="loginBtn">Login / دخول</button>
+        </div>
+        <div id="lg_error" class="error hidden">⚠️ Wrong username or password. اسم المستخدم أو كلمة المرور غير صحيحة.</div>
+      </div>
+      <div class="login-footer muted small">© 2025 Ghadeer Logistics Trans</div>
+    </div>
+    <div class="bg-blur"></div>
+  </section>
+
+  <main class="container">
+    <section id="app" class="hidden">
+      <section id="clients" class="tab-pane">
+        <div class="grid">
+          <div class="card">
+            <h2>👥 Add Client / إضافة عميل</h2>
+            <div class="form-grid">
+              <div><label>Name / الاسم</label><input id="c_name" placeholder="مثال: شركة شمال كردستان"/></div>
+              <div><label>Phone / الهاتف</label><input id="c_phone" placeholder="07xxxxxxxx"/></div>
+              <div><label>City / المدينة</label><input id="c_city" placeholder="أربيل"/></div>
+              <div class="actions" style="align-items:end">
+                <button class="btn primary" id="addClientBtn">➕ Add / إضافة</button>
+                <button class="btn ghost" id="exportClientsBtn">⬇️ Export / تصدير</button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="toolbar">
+              <div class="search" style="flex:1"><label>Search / بحث</label><input id="clientSearch" placeholder="Name, Phone..."/></div>
+              <div><label>Sort / فرز</label><select id="clientSort">
+                <option value="name">By Name / الاسم</option>
+                <option value="balanceDesc">Balance ↓ / الرصيد (تنازلي)</option>
+                <option value="balanceAsc">Balance ↑ / الرصيد (تصاعدي)</option>
+                <option value="invoices">Operations / العمليات</option>
+              </select></div>
+            </div>
+            <div style="margin-top:10px; overflow:auto">
+              <table>
+                <thead><tr><th>Client / العميل</th><th>Phone / الهاتف</th><th>City / المدينة</th><th>Ops / العمليات</th><th>Balance / الرصيد</th><th class="right">Options / خيارات</th></tr></thead>
+                <tbody id="clientRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="transactions" class="tab-pane hidden">
+        <div class="grid">
+          <div class="card">
+            <h2>🧾 Add Invoice / إضافة فاتورة</h2>
+            <div class="form-grid">
+              <div><label>Client / العميل</label><select id="t_client"></select></div>
+              <div><label>Description / الوصف</label><input id="t_desc" placeholder="Service description"/></div>
+              <div><label>Amount / المبلغ</label><input id="t_amount" type="number" step="0.01" placeholder="0"/></div>
+              <div><label>Date / التاريخ</label><input id="t_date" type="date"/></div>
+              <div class="actions" style="grid-column:1/-1"><button class="btn primary" id="addInvoiceBtn">🧾 Add / إضافة</button></div>
+            </div>
+          </div>
+          <div class="card">
+            <h2>💸 Record Payment / تسجيل دفعة</h2>
+            <div class="form-grid">
+              <div><label>Client / العميل</label><select id="p_client"></select></div>
+              <div><label>Description / الوصف</label><input id="p_desc" placeholder="e.g. Cash payment"/></div>
+              <div><label>Amount / المبلغ</label><input id="p_amount" type="number" step="0.01" placeholder="0"/></div>
+              <div><label>Date / التاريخ</label><input id="p_date" type="date"/></div>
+              <div class="actions" style="grid-column:1/-1"><button class="btn primary" id="addPaymentBtn">💸 Add / إضافة</button></div>
+            </div>
+            <p class="muted">Payments reduce client balance and are not company expenses. الدفعات تُقلل رصيد العميل وليست مصروفًا.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="expenses" class="tab-pane hidden">
+        <div class="grid">
+          <div class="card">
+            <h2>🛠️ Add Expense / إضافة مصروف</h2>
+            <div class="form-grid">
+              <div><label>Description / الوصف</label><input id="e_desc" placeholder="Fuel, Maintenance, Salaries..."/></div>
+              <div><label>Amount / المبلغ</label><input id="e_amount" type="number" step="0.01" placeholder="0"/></div>
+              <div><label>Date / التاريخ</label><input id="e_date" type="date"/></div>
+              <div class="actions" style="grid-column:1/-1"><button class="btn primary" id="addExpenseBtn">🛠️ Add / إضافة</button></div>
+            </div>
+          </div>
+          <div class="card">
+            <h2>📜 Expenses Log / سجل المصروفات</h2>
+            <div style="overflow:auto">
+              <table>
+                <thead><tr><th>Date / التاريخ</th><th>Description / الوصف</th><th>Amount / المبلغ</th><th class="right">Options / خيارات</th></tr></thead>
+                <tbody id="expenseRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="summary" class="tab-pane hidden">
+        <div class="grid">
+          <div class="card">
+            <h2>📊 Summary / ملخص</h2>
+            <div class="stats">
+              <div class="stat"><small>Total Invoices / إجمالي الفواتير</small><h3 id="s_totalInvoices">-</h3></div>
+              <div class="stat"><small>Total Payments / إجمالي الدفعات</small><h3 id="s_totalPayments">-</h3></div>
+              <div class="stat"><small>Total Expenses / إجمالي المصروفات</small><h3 id="s_totalExpenses">-</h3></div>
+              <div class="stat"><small>Net Profit / صافي الربح</small><h3 id="s_netProfit">-</h3></div>
+            </div>
+            <p class="muted">Profit = Invoices − Expenses. الربح = الفواتير − المصروفات.</p>
+          </div>
+          <div class="card">
+            <h2>🏆 Top Clients / أفضل العملاء</h2>
+            <div style="overflow:auto">
+              <table>
+                <thead><tr><th>Client / العميل</th><th>#Invoices / عدد الفواتير</th><th>Total / الإجمالي</th><th>Balance / الرصيد</th></tr></thead>
+                <tbody id="topClientsRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="settings" class="tab-pane hidden">
+        <div class="card">
+          <h2>⚙️ Settings / الإعدادات</h2>
+          <div class="form-grid">
+            <div><label>Currency (code) / العملة</label><input id="currencyCode" placeholder="USD"/></div>
+            <div><label>Locale / تنسيق الأرقام</label><select id="localeSelect">
+              <option value="en-US">en-US</option>
+              <option value="ar">ar</option>
+              <option value="ar-SA">ar-SA</option>
+            </select></div>
+            <div class="actions" style="grid-column:1/-1">
+              <button class="btn primary" id="saveSettingsBtn">💾 Save / حفظ</button>
+              <button class="btn" id="exportAllBtn">⬇️ Export Encrypted Backup / تصدير نسخة مشفّرة</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div class="drawer" id="drawer">
+    <div class="drawer-panel">
+      <div class="print-header">
+        <img src="assets/icons/brand-card.jpg" class="print-logo" alt="Ghadeer"/>
+        <div class="print-title">
+          <h1>Customer Statement / كشف حساب عميل</h1>
+          <div class="print-meta" id="printMeta"></div>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; position:sticky; top:0; background:#0b1224; padding-bottom:10px">
+        <div>
+          <h2 id="d_title" style="margin:0">Statement / كشف حساب</h2>
+          <div class="muted" id="d_subtitle"></div>
+        </div>
+        <div class="actions">
+          <button class="btn" id="d_print">🖨️ Print PDF / طباعة PDF</button>
+          <button class="btn" id="d_export">⬇️ Export JSON / تصدير</button>
+          <button class="btn" id="d_close">✖️ Close / إغلاق</button>
+        </div>
+      </div>
+      <div class="toolbar" style="margin-top:8px">
+        <div class="search" style="flex:1"><label>Search / بحث</label><input id="d_search" placeholder="Filter by description..."/></div>
+        <div><label>Range / المدة</label><select id="d_range">
+          <option value="all">All time / كل الوقت</option><option value="30">Last 30 days / آخر 30 يوم</option><option value="90">Last 90 days / آخر 90 يوم</option><option value="365">Last year / آخر سنة</option>
+        </select></div>
+      </div>
+      <div style="margin-top:10px; overflow:auto">
+        <table>
+          <thead><tr><th>Date / التاريخ</th><th>Details / البيان</th><th>Type / النوع</th><th>Amount / المبلغ</th><th>Balance / الرصيد بعد العملية</th><th class="right no-print">Options / خيارات</th></tr></thead>
+          <tbody id="d_rows"></tbody>
+        </table>
+      </div>
+      <div class="print-footer">Generated by Ghadeer Accounts – Ghadeer Logistics Trans © 2025</div>
+    </div>
+  </div>
+</body>
+</html>

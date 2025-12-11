@@ -1,0 +1,21 @@
+{
+  "name": "Ghadeer Accounts – Login Edition",
+  "short_name": "Ghadeer",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#38bdf8",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "assets/icons/truck.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/truck.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
